@@ -6,9 +6,14 @@ import {
   IconButton,
   Paper,
   Typography,
+  Avatar,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios';
+
+import user from '../assets/react.svg';
+import ai from '../assets/AI.png';
+
 
 const QuestionSection = ({ filename, onError }) => {
   const [question, setQuestion] = useState('');
@@ -80,7 +85,20 @@ const QuestionSection = ({ filename, onError }) => {
                 borderTopLeftRadius: message.type === 'ai' ? '4px' : '12px',
               }}
             >
-              <Typography>{message.content}</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Avatar
+                  sx={{
+                    width: 32,
+                    height: 32
+                  }}
+                >
+                  {message.type === 'user' ? 
+                    'U':
+                    <img src={ai} alt="AI" style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                  }
+                </Avatar>
+                <Typography>{message.content}</Typography>
+              </Box>
             </Paper>
           </Box>
         ))}
