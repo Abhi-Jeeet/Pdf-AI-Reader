@@ -1,0 +1,6 @@
+PyMuPDF==1.23.8
+langchain==0.1.9
+langchain-community==0.0.21
+faiss-cpu==1.7.4
+python-dotenv==1.0.1
+ollama==0.1.6 
