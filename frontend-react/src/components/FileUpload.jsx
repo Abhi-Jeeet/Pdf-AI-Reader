@@ -2,9 +2,8 @@ import React, { useRef } from 'react';
 import {
   Button,
   Box,
-  Typography,
 } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import UploadIcon from '@mui/icons-material/Upload';
 import axios from 'axios';
 
 const FileUpload = ({ setCurrentFile, setLoading, onSuccess, onError }) => {
@@ -41,7 +40,7 @@ const FileUpload = ({ setCurrentFile, setLoading, onSuccess, onError }) => {
   };
 
   return (
-    <Box textAlign="center">
+    <Box>
       <input
         type="file"
         accept=".pdf"
@@ -50,16 +49,20 @@ const FileUpload = ({ setCurrentFile, setLoading, onSuccess, onError }) => {
         style={{ display: 'none' }}
       />
       <Button
-        variant="contained"
-        startIcon={<CloudUploadIcon />}
+        variant="outlined"
+        startIcon={<UploadIcon />}
         onClick={() => fileInputRef.current.click()}
-        sx={{ mb: 2 }}
+        sx={{
+          color: '#000',
+          borderColor: '#000',
+          '&:hover': {
+            borderColor: '#000',
+            backgroundColor: 'rgba(0, 0, 0, 0.04)',
+          },
+        }}
       >
         Upload PDF
       </Button>
-      <Typography variant="body2" color="textSecondary">
-        Upload a PDF file to get started
-      </Typography>
     </Box>
   );
 };

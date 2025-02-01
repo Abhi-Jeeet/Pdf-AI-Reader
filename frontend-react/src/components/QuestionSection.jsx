@@ -1,23 +1,29 @@
 import React, { useState } from 'react';
 import {
   TextField,
-  Button,
   Box,
-  Typography,
-  Paper,
   CircularProgress,
+  IconButton,
+  Paper,
+  Typography,
 } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios';
 
 const QuestionSection = ({ filename, onError }) => {
   const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
   const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState([]);
 
   const handleQuestionSubmit = async (e) => {
     e.preventDefault();
     if (!question.trim()) return;
 
+    const userMessage = {
+      type: 'user',
+      content: question.trim(),
+    };
+    setMessages(prev => [...prev, userMessage]);
     setLoading(true);
 
     try {
@@ -28,53 +34,81 @@ const QuestionSection = ({ filename, onError }) => {
         },
       });
 
-      setAnswer(response.data.answer);
+      const aiMessage = {
+        type: 'ai',
+        content: response.data.answer,
+      };
+      setMessages(prev => [...prev, aiMessage]);
+      setQuestion('');
     } catch (error) {
       onError(error.response?.data?.detail || 'Error getting answer');
-      setAnswer('');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Box sx={{ mt: 4 }}>
-      <form onSubmit={handleQuestionSubmit}>
+    <Box className="message-container">
+      <Box 
+        sx={{ 
+          flex: 1, 
+          overflowY: 'auto', 
+          mb: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          maxHeight: '60vh'
+        }}
+      >
+        {messages.map((message, index) => (
+          <Box
+            key={index}
+            sx={{
+              display: 'flex',
+              justifyContent: message.type === 'user' ? 'flex-end' : 'flex-start',
+            }}
+          >
+            <Paper
+              elevation={1}
+              sx={{
+                p: 2,
+                maxWidth: '70%',
+                marginBottom: '10px',
+                backgroundColor: message.type === 'user' ? '#e3f2fd' : '#e8f5e9',
+                borderRadius: '12px',
+                borderTopRightRadius: message.type === 'user' ? '4px' : '12px',
+                borderTopLeftRadius: message.type === 'ai' ? '4px' : '12px',
+              }}
+            >
+              <Typography>{message.content}</Typography>
+            </Paper>
+          </Box>
+        ))}
+      </Box>
+
+      <form onSubmit={handleQuestionSubmit} style={{ display: 'flex', gap: '10px' }}>
         <TextField
           fullWidth
-          label="Ask a question about the PDF"
+          placeholder="Send a message..."
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           variant="outlined"
-          sx={{ mb: 2 }}
+          disabled={loading}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              backgroundColor: '#fff',
+            },
+          }}
         />
-        <Button
+        <IconButton 
           type="submit"
-          variant="contained"
-          color="primary"
           disabled={loading || !question.trim()}
-          sx={{ mb: 2 }}
+          color="primary"
+          sx={{ p: '10px' }}
         >
-          Ask Question
-        </Button>
+          {loading ? <CircularProgress size={24} /> : <SendIcon />}
+        </IconButton>
       </form>
-
-      {loading && (
-        <Box display="flex" justifyContent="center" my={2}>
-          <CircularProgress />
-        </Box>
-      )}
-
-      {answer && (
-        <Paper elevation={2} sx={{ p: 2, mt: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Answer:
-          </Typography>
-          <Typography variant="body1" style={{ whiteSpace: 'pre-wrap' }}>
-            {answer}
-          </Typography>
-        </Paper>
-      )}
     </Box>
   );
 };
