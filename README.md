@@ -6,7 +6,7 @@ This application allows users to upload PDF files, extract text from them, and a
 
 ### Backend Architecture
 
-The backend is built with **FastAPI** (Python 3.10+) and handles PDF processing and question answering.
+The backend is built with **FastAPI** (Python 3.10) and handles PDF processing and question answering.
 
 #### Key Backend Components
 
