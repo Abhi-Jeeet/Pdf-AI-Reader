@@ -44,7 +44,7 @@ class PDFProcessor:
         docs = self.vector_store.similarity_search(question)
         
         # Create QA chain with Ollama
-        llm = Ollama(model="llama3.2")  # You can change the model as needed
+        llm = Ollama(model="llama3.2")  
         chain = load_qa_chain(llm, chain_type="stuff")
         
         # Get answer
